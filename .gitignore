@@ -1,18 +1,14 @@
 # --- Data protection ---
-# 生データを絶対にGitHubに送らない73
 data/
 *.csv
 *.xlsx
 *.rds
 *.RData
 
-# --- System / Temp files ---
-.Rhistory
-.DS_Store
-.Rproj.user/
-__pycache__/
-
-# --- Large Documents ---
-# 論文PDFなども重いので除外（コードのみ管理するため）
+# --- Presentation / Docs ---
+*.pptx
 *.pdf
-sample/*.pptx
+
+# --- System ---
+.DS_Store
+.Rhistory
