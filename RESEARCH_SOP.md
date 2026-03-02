@@ -39,7 +39,19 @@
 - リスクテーブル、95%信頼区間、p値表示は図ごとに統一する。
 - サイズは用途に応じて 3.5 inch または 10 inch を適用する。
 
-## 5. 保存規則
+## 5. 言語規則
+- 論文・学会発表に使用するグラフ・表（Figure / Table）のラベル、タイトル、凡例、軸名はすべて**英語**で作成する。
+- 解析過程の確認用（探索的集計・ログ等）は日本語のままで構わない。
+
+## 5b. Figure出力規則
+- Figureは必ず**論文用・発表用の2種類**を作成する。
+- 保存先:
+  - 論文用: `outputs/figures/journal/`（`width = 3.5`, `height = 2.625` inch, `base_size = 11`）
+  - 発表用: `outputs/figures/presentation/`（`width = 10`, `height = 6` inch, `base_size = 22`, 太字）
+- ファイル名は同一のベース名に `_journal` / `_presentation` サフィックスを付ける。
+  - 例: `fig_dow_boxplot_journal.pdf` / `fig_dow_boxplot_presentation.pdf`
+
+## 6. 保存規則
 - ファイル名は内容.pdf とする。
 - スクリーンショットは使用しない。
 
