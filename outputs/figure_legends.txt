@@ -1,0 +1,14 @@
+[Figure 1] fig1_dow_boxplot
+Title: Alarm frequency by day of week
+Legend: Box plots showing the distribution of daily alarm counts for each day of the week over the 57-day study period (July 15 – September 9, 2025). The box represents the interquartile range (IQR), the horizontal line within the box indicates the median, and whiskers extend to 1.5 × IQR. Outliers are shown as individual points.
+---
+
+[Figure 2] fig2_hourly_alarm_type
+Title: Hourly alarm burden by alarm type
+Legend: Stacked bar chart showing the average number of alarms per hour of the day, stratified by alarm type. Blue bars represent clinical alarms (physiological events such as SpO2 desaturation, tachycardia, and arrhythmias); yellow bars represent technical alarms (device or signal issues such as probe disconnection, electrode detachment, and signal loss). Values represent daily averages over the 57-day study period.
+---
+
+[Figure 3] fig3_duration_dist
+Title: Distribution of alarm duration by nurse response
+Legend: Histogram of alarm duration (seconds) for clinical alarms with duration 1–300 seconds, stratified by whether the alarm was silenced by nursing staff (blue) or not silenced (yellow). Bin width = 10 seconds.
+---
