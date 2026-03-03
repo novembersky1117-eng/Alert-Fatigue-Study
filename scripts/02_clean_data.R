@@ -14,7 +14,11 @@
 #   - 同一分内に同一ベッドで同種アラームが複数発生した正当な別イベントだった
 #   → 除外なし
 #
-# Step 3: duration_sec = 0 のフラグ付与
+# Step 3: アラーム分類（alarm_class）の付与
+#   - technical: 機器・信号の問題（SpO2プローブ確認、電極確認、電波切れ等）
+#   - clinical:  実際の生体値・不整脈（SpO2実測値、TACHYCARDIA、V.FIB等）
+#
+# Step 4: duration_sec = 0 のフラグ付与
 #   - 0秒アラームが28,643件（約15%）存在する
 #   - 記録精度上1秒未満で終了したと解釈し、除外はしない
 #   - duration_zero フラグを付与して解析時に区別できるようにする
@@ -61,7 +65,27 @@ cat("[Step 2] 真の重複確認（datetime秒精度）\n")
 cat("  真の重複行数:", n_true_dup, "→ 除外なし\n\n")
 
 # -----------------------------------------------------------------------------
-# Step 3 & 4: フラグ付与
+# Step 3: alarm_class の付与
+# -----------------------------------------------------------------------------
+
+df <- df |>
+  mutate(
+    alarm_class = case_when(
+      (内容１ == "SpO2" & 内容２ %in% c("プローブ確認", "脈波検出不能", "外来光ノイズ")) |
+      内容１ == "電極確認" |
+      内容１ == "電波切れ" |
+      内容１ == "解析不能" |
+      (内容１ == "NIBP" & 内容２ == "脈波検出不能") ~ "technical",
+      TRUE ~ "clinical"
+    )
+  )
+
+cat("[Step 3] alarm_class フラグ\n")
+print(table(df$alarm_class))
+cat("\n")
+
+# -----------------------------------------------------------------------------
+# Step 4 & 5: フラグ付与
 # -----------------------------------------------------------------------------
 
 df <- df |>
@@ -70,10 +94,10 @@ df <- df |>
     duration_long = duration_sec > 3600         # 1時間超アラームフラグ
   )
 
-cat("[Step 3] duration_zero フラグ（0秒アラーム）\n")
+cat("[Step 4] duration_zero フラグ（0秒アラーム）\n")
 cat("  件数:", sum(df$duration_zero), "(", round(mean(df$duration_zero)*100, 1), "%)\n\n")
 
-cat("[Step 4] duration_long フラグ（1時間超アラーム）\n")
+cat("[Step 5] duration_long フラグ（1時間超アラーム）\n")
 cat("  件数:", sum(df$duration_long), "(", round(mean(df$duration_long)*100, 1), "%)\n\n")
 
 # -----------------------------------------------------------------------------
@@ -81,16 +105,19 @@ cat("  件数:", sum(df$duration_long), "(", round(mean(df$duration_long)*100, 1
 # -----------------------------------------------------------------------------
 
 log <- tibble(
-  step        = c("Step1_非アラームイベント除外", "Step2_真の重複（除外なし）",
-                  "Step3_duration_zeroフラグ",   "Step4_duration_longフラグ"),
-   対象行数   = c(nrow(removed_step1), n_true_dup,
-                  sum(df$duration_zero), sum(df$duration_long)),
-  処置       = c("除外", "除外なし（真の重複0件）", "フラグ付与のみ", "フラグ付与のみ"),
-  クリーニング後行数 = c(nrow(df), nrow(df), nrow(df), nrow(df))
+  step       = c("Step1_非アラームイベント除外", "Step2_真の重複（除外なし）",
+                 "Step3_alarm_classフラグ",
+                 "Step4_duration_zeroフラグ",   "Step5_duration_longフラグ"),
+  対象行数   = c(nrow(removed_step1), n_true_dup,
+                 sum(df$alarm_class == "technical"),
+                 sum(df$duration_zero), sum(df$duration_long)),
+  処置       = c("除外", "除外なし（真の重複0件）", "フラグ付与のみ",
+                 "フラグ付与のみ", "フラグ付与のみ"),
+  クリーニング後行数 = rep(nrow(df), 5)
 )
 
-write_excel_csv(log, "outputs/cleaning_log.csv")
-cat("クリーニングログ保存: outputs/cleaning_log.csv\n\n")
+write_excel_csv(log, "outputs/stats/cleaning_log.csv")
+cat("クリーニングログ保存: outputs/stats/cleaning_log.csv\n\n")
 
 # -----------------------------------------------------------------------------
 # 保存

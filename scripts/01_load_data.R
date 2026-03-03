@@ -54,6 +54,9 @@ df <- raw |>
     # 優先度をfactor（順序付き）
     優先度 = factor(優先度, levels = c("ADVISORY", "WARNING", "CRISIS")),
 
+    # アラーム解除を論理型に変換（"1.0" → TRUE, NA → FALSE）
+    silenced = !is.na(アラーム解除),
+
     # sourceをfactor
     source = factor(source)
   )
