@@ -12,3 +12,23 @@ Legend: Stacked bar chart showing the average number of alarms per hour of the d
 Title: Distribution of alarm duration by nurse response
 Legend: Histogram of alarm duration (seconds) for clinical alarms with duration 1–300 seconds, stratified by whether the alarm was silenced by nursing staff (blue) or not silenced (yellow). Bin width = 10 seconds.
 ---
+
+## fig_heatmap_clinical_by_dow
+Title: Clinical Alarms by Hour of Day and Day of Week
+Legend:
+  Heatmap showing the distribution of clinical alarms across hours of the day (x-axis)
+  and days of the week (y-axis, Monday to Sunday). Each cell represents the total alarm
+  count over the 57-day observation period (2025/7/15 – 9/9). Three panels correspond
+  to alarm priority levels: ADVISORY (green), WARNING (yellow), and CRISIS (red).
+  Only clinical alarms (alarm_class == 'clinical') are included.
+
+## fig_heatmap_clinical_by_zone
+Title: Clinical Alarms by Hour of Day and Day of Week (Stratified by Zone)
+Legend:
+  Six-panel heatmap comparing clinical alarm distribution between high-acuity zone
+  (12 beds: 1101-A to E, Re-A/B, W10-01 to 05) and general zone (29 beds).
+  Rows represent priority levels (ADVISORY, WARNING, CRISIS); columns represent zones.
+  X-axis: hour of day (0-23); Y-axis: day of week (Monday to Sunday).
+  Color intensity indicates alarm count per cell (hour × day combination) over the
+  57-day observation period. Color scale is unified within each priority row to allow
+  direct zone comparison.
