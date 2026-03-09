@@ -1,0 +1,486 @@
+---
+title: "アラーム疲労解析 概要レポート"
+date: today
+lang: ja
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-title: "目次"
+    toc-depth: 3
+    theme: cosmo
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| include: false
+# プロジェクトルートを作業ディレクトリに設定
+# （data/ や outputs/ への相対パスが正しく通るようにするため）
+knitr::opts_knit$set(root.dir = normalizePath("../../"))
+```
+
+```{r libraries}
+#| include: false
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(readr)
+library(forcats)
+library(tidyr)
+library(patchwork)
+library(knitr)
+```
+
+```{r load-data}
+#| include: false
+df           <- readRDS("data/proceeded/02_cleaned.rds")
+bed_zone     <- read_csv("data/proceeded/bed_zone.csv", show_col_types = FALSE)
+stats_summary  <- read_csv("outputs/stats/stats_summary.csv", show_col_types = FALSE)
+stats_response <- read_csv("outputs/stats/stats_response_by_class_priority.csv", show_col_types = FALSE)
+stats_content  <- read_csv("outputs/stats/stats_alarm_content_classified.csv", show_col_types = FALSE) |>
+  filter(!is.na(内容１), 内容１ != "")  # 空行除去
+```
+
+---
+
+# Phase 1: 基礎構造の把握
+
+観察期間：2025年7月15日〜9月9日（57日間）、西10・西11病棟のセントラルモニタアラームログを対象とした。
+
+---
+
+## 1. データ概要
+
+```{r summary-table}
+stats_summary |>
+  kable(
+    col.names = c("項目", "値"),
+    align     = c("l", "r"),
+    format    = "html",
+    table.attr = 'class="table table-sm table-striped" style="width:auto;"'
+  )
+```
+
+---
+
+## 2. アラーム種別の構造
+
+### 主要アラーム内容（上位5件 × 分類）
+
+```{r content-table}
+# 臨床的・技術的それぞれ上位5件 + その他行を動的に生成
+make_top5_with_other <- function(data, class_label) {
+  d    <- data |> filter(alarm_class == class_label)
+  top5 <- d |> slice_max(n, n = 5, with_ties = FALSE)
+  other_n   <- sum(d$n) - sum(top5$n)
+  other_pct <- round(other_n / sum(d$n) * 100, 2)
+  bind_rows(
+    top5,
+    tibble(内容１ = "（その他）", 優先度 = "—",
+           alarm_class = class_label, n = other_n, 割合_pct = other_pct)
+  )
+}
+
+# 合計件数（ラベル用）
+clin_total <- stats_content |> filter(alarm_class == "clinical")  |> pull(n) |> sum()
+tech_total <- stats_content |> filter(alarm_class == "technical") |> pull(n) |> sum()
+grand_total <- clin_total + tech_total
+
+clin_label <- paste0(
+  "臨床的アラーム（合計 ", format(clin_total, big.mark = ","), "件 / ",
+  round(clin_total / grand_total * 100, 1), "%）"
+)
+tech_label <- paste0(
+  "技術的アラーム（合計 ", format(tech_total, big.mark = ","), "件 / ",
+  round(tech_total / grand_total * 100, 1), "%）"
+)
+
+content_table <- bind_rows(
+  make_top5_with_other(stats_content, "clinical"),
+  make_top5_with_other(stats_content, "technical")
+) |>
+  mutate(
+    alarm_class = recode(alarm_class, clinical = "臨床的", technical = "技術的"),
+    n           = format(n, big.mark = ",")
+  ) |>
+  select(alarm_class, 内容１, 優先度, n, 割合_pct) |>
+  rename(分類 = alarm_class, アラーム内容 = 内容１,
+         件数 = n, `割合 (%)` = 割合_pct)
+
+kable(
+  content_table,
+  align      = c("l", "l", "l", "r", "r"),
+  format     = "html",
+  table.attr = 'class="table table-sm table-striped" style="width:auto;"'
+) |>
+  # グループラベルを手動で差し込む（kableExtraなしで対応）
+  gsub(
+    pattern     = "<tbody>",
+    replacement = paste0(
+      '<tbody>',
+      '<tr class="table-secondary"><td colspan="5"><strong>', clin_label, '</strong></td></tr>'
+    )
+  ) |>
+  gsub(
+    pattern     = '<tr><td style="text-align:left;">技術的',
+    replacement = paste0(
+      '<tr class="table-secondary"><td colspan="5"><strong>', tech_label, '</strong></td></tr>',
+      '<tr><td style="text-align:left;">技術的'
+    )
+  )
+```
+
+### 時間帯別アラーム件数（技術的 vs 臨床的）
+
+```{r fig-hourly}
+#| fig-width: 7
+#| fig-height: 3.5
+#| fig-cap: "時間帯別アラーム件数（臨床的 vs 技術的）。観察期間57日間の1日平均件数を時間帯別に示す。"
+
+n_days <- as.numeric(as.Date("2025-09-09") - as.Date("2025-07-15")) + 1
+
+hourly_class <- df |>
+  mutate(
+    hour        = hour(datetime),
+    alarm_class = factor(alarm_class,
+                         levels = c("technical", "clinical"),
+                         labels = c("Technical", "Clinical"))
+  ) |>
+  count(hour, alarm_class, name = "total") |>
+  mutate(per_day = total / n_days)
+
+ggplot(hourly_class, aes(x = hour, y = per_day, fill = alarm_class)) +
+  geom_col() +
+  scale_fill_manual(values = c("Technical" = "#F0E442", "Clinical" = "#0072B2")) +
+  scale_x_continuous(breaks = seq(0, 23, by = 3)) +
+  labs(x = "Hour of Day", y = "Number of Alarms (per day)", fill = "Alarm Type") +
+  theme_classic(base_size = 12) +
+  theme(legend.position = "top")
+```
+
+---
+
+## 3. 時間的曝露パターン
+
+### 曜日別アラーム件数
+
+```{r fig-dow}
+#| fig-width: 7
+#| fig-height: 3.5
+#| fig-cap: "曜日別アラーム件数（箱ひげ図）。1日あたりの総アラーム件数の分布を曜日別に示す。"
+
+daily <- df |>
+  mutate(date = as.Date(datetime)) |>
+  count(date, name = "n") |>
+  mutate(dow = factor(
+    wday(date, label = TRUE, abbr = TRUE, week_start = 1),
+    levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+  ))
+
+ggplot(daily, aes(x = dow, y = n)) +
+  geom_boxplot(fill = "#0072B2", color = "black", alpha = 0.7,
+               outlier.shape = 16, outlier.size = 1.5) +
+  labs(x = "Day of Week", y = "Number of Alarms (per day)") +
+  theme_classic(base_size = 12)
+```
+
+### 時間帯×曜日ヒートマップ（臨床的アラーム・優先度別）
+
+```{r fig-heatmap-dow}
+#| fig-width: 7
+#| fig-height: 6
+#| fig-cap: "臨床的アラームの時間帯×曜日ヒートマップ（優先度別）。観察期間57日間の累積件数を示す。"
+
+counts_dow <- df |>
+  filter(alarm_class == "clinical") |>
+  mutate(
+    hour = hour(datetime),
+    dow  = wday(datetime, label = TRUE, abbr = FALSE, week_start = 1)
+  ) |>
+  count(hour, dow, 優先度)
+
+make_heatmap_dow <- function(data, priority, high_color, panel_label,
+                             show_x = FALSE) {
+  p <- data |>
+    filter(優先度 == priority) |>
+    tidyr::complete(hour = 0:23, dow, fill = list(n = 0)) |>
+    ggplot(aes(x = hour, y = fct_rev(dow), fill = n)) +
+    geom_tile(color = "white", linewidth = 0.3) +
+    scale_fill_gradient(low = "white", high = high_color, name = "Count") +
+    scale_x_continuous(breaks = seq(0, 23, by = 3),
+                       labels = paste0(seq(0, 23, by = 3), ":00"),
+                       expand = c(0, 0)) +
+    scale_y_discrete(expand = c(0, 0)) +
+    labs(title = panel_label, x = NULL, y = NULL) +
+    theme_minimal(base_size = 9) +
+    theme(
+      plot.title  = element_text(face = "bold", size = 9),
+      panel.grid  = element_blank(),
+      axis.text.y = element_text(size = 7)
+    )
+  if (show_x) {
+    p + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 7))
+  } else {
+    p + theme(axis.text.x = element_blank())
+  }
+}
+
+p_adv <- make_heatmap_dow(counts_dow, "ADVISORY", "#2ca02c", "ADVISORY")
+p_war <- make_heatmap_dow(counts_dow, "WARNING",  "#e6a817", "WARNING")
+p_cri <- make_heatmap_dow(counts_dow, "CRISIS",   "#d62728", "CRISIS", show_x = TRUE)
+
+p_adv / p_war / p_cri +
+  plot_annotation(
+    title    = "Clinical Alarms by Hour of Day and Day of Week",
+    subtitle = "Observation period: 2025/7/15 – 9/9 (57 days), clinical alarms only",
+    theme    = theme(
+      plot.title    = element_text(face = "bold", size = 10),
+      plot.subtitle = element_text(size = 8, color = "gray40")
+    )
+  )
+```
+
+---
+
+## 4. 看護師反応の実態
+
+### 分類×優先度別 消音率・反応時間（duration ≥ 30秒）
+
+```{r response-table}
+stats_response |>
+  mutate(
+    alarm_class           = recode(alarm_class, clinical = "臨床的", technical = "技術的"),
+    n                     = format(n, big.mark = ","),
+    消音あり              = format(消音あり, big.mark = ","),
+    反応時間中央値_sec    = ifelse(is.na(反応時間中央値_sec), "—",
+                                   as.character(反応時間中央値_sec))
+  ) |>
+  rename(
+    分類                  = alarm_class,
+    件数                  = n,
+    `消音率 (%)`          = 消音率_pct,
+    `反応時間中央値 (秒)` = 反応時間中央値_sec
+  ) |>
+  kable(
+    align      = c("l", "l", "r", "r", "r", "r"),
+    format     = "html",
+    table.attr = 'class="table table-sm table-striped" style="width:auto;"'
+  )
+```
+
+> **注**: `duration ≥ 30秒` のアラームのみを対象とした。反応時間は看護師が消音ボタンを押すまでの秒数（消音ありのみ）。
+
+### 臨床的アラームの持続時間分布（消音あり vs なし）
+
+```{r fig-duration}
+#| fig-width: 7
+#| fig-height: 3.5
+#| fig-cap: "臨床的アラームの持続時間分布（消音あり vs なし）。1〜300秒の範囲を表示。"
+
+dur_data <- df |>
+  filter(alarm_class == "clinical", duration_sec >= 1, duration_sec <= 300) |>
+  mutate(
+    silenced_label = factor(silenced,
+                            levels = c(FALSE, TRUE),
+                            labels = c("Not Silenced", "Silenced"))
+  )
+
+ggplot(dur_data, aes(x = duration_sec, fill = silenced_label)) +
+  geom_histogram(binwidth = 10, position = "identity", alpha = 0.7) +
+  scale_fill_manual(values = c("Not Silenced" = "#F0E442", "Silenced" = "#0072B2")) +
+  labs(x = "Alarm Duration (seconds)", y = "Count", fill = NULL) +
+  theme_classic(base_size = 12) +
+  theme(legend.position = "top")
+```
+
+---
+
+## 5. ゾーン別アラーム分布
+
+高重症ゾーン（12床：1101-A〜E, Re-A/B, W10-01〜05）と一般ゾーン（29床）に分けて臨床的アラームの時間帯・曜日パターンを比較した。
+
+```{r fig-heatmap-zone}
+#| fig-width: 9
+#| fig-height: 6
+#| fig-cap: "臨床的アラームのゾーン別・時間帯×曜日ヒートマップ。同一優先度内でカラースケールを統一して比較可能にしている。"
+
+counts_zone <- df |>
+  filter(alarm_class == "clinical") |>
+  left_join(bed_zone, by = "ベッド名") |>
+  mutate(
+    hour = hour(datetime),
+    dow  = wday(datetime, label = TRUE, abbr = FALSE, week_start = 1)
+  ) |>
+  count(hour, dow, 優先度, ゾーン)
+
+scale_max <- counts_zone |>
+  group_by(優先度) |>
+  summarise(max_n = max(n), .groups = "drop")
+
+make_heatmap_zone <- function(data, priority, zone, high_color, max_n,
+                               show_x = FALSE, show_title = FALSE,
+                               title_label = "") {
+  d <- data |>
+    filter(優先度 == priority, ゾーン == zone) |>
+    complete(hour = 0:23, dow = levels(data$dow), fill = list(n = 0))
+
+  p <- ggplot(d, aes(x = hour, y = fct_rev(dow), fill = n)) +
+    geom_tile(color = "white", linewidth = 0.3) +
+    scale_fill_gradient(low = "white", high = high_color,
+                        name = "Count", limits = c(0, max_n)) +
+    scale_x_continuous(breaks = seq(0, 23, by = 3),
+                       labels = paste0(seq(0, 23, by = 3), ":00"),
+                       expand = c(0, 0)) +
+    scale_y_discrete(expand = c(0, 0)) +
+    labs(x = NULL, y = NULL) +
+    theme_minimal(base_size = 9) +
+    theme(panel.grid = element_blank(), axis.text.y = element_text(size = 7))
+
+  if (show_x) p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 7))
+  else        p <- p + theme(axis.text.x = element_blank())
+
+  if (show_title) p <- p + labs(title = title_label) +
+    theme(plot.title = element_text(face = "bold", size = 9, hjust = 0.5))
+  p
+}
+
+max_adv <- scale_max |> filter(優先度 == "ADVISORY") |> pull(max_n)
+max_war <- scale_max |> filter(優先度 == "WARNING")  |> pull(max_n)
+max_cri <- scale_max |> filter(優先度 == "CRISIS")   |> pull(max_n)
+
+label_theme <- theme(
+  plot.tag          = element_text(face = "bold", size = 8, angle = 90, vjust = 0.5),
+  plot.tag.position = "left"
+)
+
+p_ah <- make_heatmap_zone(counts_zone, "ADVISORY", "高重症", "#2ca02c", max_adv,
+                           show_title = TRUE, title_label = "High-acuity Zone") +
+  labs(tag = "ADVISORY") + label_theme
+p_ag <- make_heatmap_zone(counts_zone, "ADVISORY", "一般",   "#2ca02c", max_adv,
+                           show_title = TRUE, title_label = "General Zone")
+p_wh <- make_heatmap_zone(counts_zone, "WARNING",  "高重症", "#e6a817", max_war) +
+  labs(tag = "WARNING") + label_theme
+p_wg <- make_heatmap_zone(counts_zone, "WARNING",  "一般",   "#e6a817", max_war)
+p_ch <- make_heatmap_zone(counts_zone, "CRISIS",   "高重症", "#d62728", max_cri, show_x = TRUE) +
+  labs(tag = "CRISIS") + label_theme
+p_cg <- make_heatmap_zone(counts_zone, "CRISIS",   "一般",   "#d62728", max_cri, show_x = TRUE)
+
+(p_ah | p_ag) / (p_wh | p_wg) / (p_ch | p_cg) +
+  plot_annotation(
+    title    = "Clinical Alarms by Hour of Day and Day of Week",
+    subtitle = "Stratified by ward zone. 2025/7/15 – 9/9 (57 days). Color scale unified within each priority.",
+    theme    = theme(
+      plot.title    = element_text(face = "bold", size = 11),
+      plot.subtitle = element_text(size = 8, color = "gray40")
+    )
+  )
+```
+
+---
+
+## 6. Phase 1 まとめと課題
+
+### 主な発見
+
+- 技術的アラームが全体の **69.5%**（うちSpO2プローブ確認だけで48%）を占め、看護師にほぼ無視されている（消音率 0.7%）
+- 臨床的アラームの消音率は優先度に大きく依存：ADVISORY 17.8%、WARNING 25.1%、CRISIS 93%
+- CRISISアラームへの反応時間中央値は **9秒** と迅速だが、WARNINGは **31秒**
+- 消音ありアラームの持続時間中央値（36秒）は消音なし（10秒）より長く、短時間での自然終了が「無反応」の多くを説明する可能性がある
+
+### 解釈上の限界
+
+- `silenced`（消音）は「臨床的対応」と「とりあえず消音」を区別できない
+- `response_sec` も「ボタン押下時間」であり、患者評価までの時間ではない
+- アラームログ単体で「臨床的に有害な無反応」を直接証明することは困難
+
+### 個人メモ、20260309クオリティ相談しての追加検討事項（北村先生、新開師長）
+
+- 重症度、反応時間を分けてみてみる。さらにそれを時間帯ごとに反応時間を見てみる。
+- 看護師も−22時までは仮眠にいっていない。それ以降は人数が減るから反応時間が変わるはず（予想）。
+- 勝手に消えているアラームはなにかを可視化する。
+- **パラメータごとの消去時間と消去率**→これこそ看護師の直感じゃない？
+
+---
+
+## 7. パラメータ別消去率・消去時間
+
+各アラームパラメータ（内容１）× 優先度 × 分類ごとに、消去率・消去時間中央値・高重症ゾーン由来割合を集計した（n ≥ 10 のみ）。
+
+```{r response-by-param-table}
+response_by_param <- read_csv("outputs/stats/stats_response_by_parameter.csv",
+                               show_col_types = FALSE)
+
+response_by_param |>
+  mutate(
+    alarm_class        = recode(alarm_class, clinical = "臨床的", technical = "技術的"),
+    n                  = format(n, big.mark = ","),
+    消去あり           = format(消去あり, big.mark = ","),
+    消去時間中央値_sec = ifelse(is.na(消去時間中央値_sec), "—",
+                                as.character(消去時間中央値_sec))
+  ) |>
+  rename(
+    分類                  = alarm_class,
+    件数                  = n,
+    `消去率 (%)`          = 消去率_pct,
+    `消去時間中央値 (秒)` = 消去時間中央値_sec,
+    `duration中央値 (秒)` = duration中央値_sec,
+    `高重症割合 (%)`      = 高重症割合_pct
+  ) |>
+  kable(
+    align      = c("l", "l", "l", "r", "r", "r", "r", "r"),
+    format     = "html",
+    table.attr = 'class="table table-sm table-striped" style="width:auto;"'
+  )
+```
+
+```{r fig-response-by-param}
+#| fig-width: 8
+#| fig-height: 5
+#| fig-cap: "パラメータ別消去率・消去時間散布図。Y軸は対数スケール。色は分類（臨床的／技術的）、形は優先度を示す。"
+
+library(ggrepel)
+
+plot_data <- response_by_param |>
+  filter(!is.na(消去時間中央値_sec)) |>
+  mutate(
+    param_label = recode(内容１,
+      "電波切れ" = "Signal Loss",
+      "電極確認" = "Electrode Check",
+      "解析不能" = "Unanalyzable",
+      .default   = 内容１
+    )
+  )
+
+ggplot(plot_data,
+       aes(x     = 消去率_pct,
+           y     = 消去時間中央値_sec,
+           color = alarm_class,
+           shape = 優先度,
+           label = param_label)) +
+  geom_point(aes(size = n), alpha = 0.7) +
+  geom_text_repel(size = 2.8, max.overlaps = 25,
+                  segment.color = "grey60", segment.size = 0.3) +
+  scale_color_manual(
+    values = c("clinical" = "#0072B2", "technical" = "#E69F00"),
+    labels = c("Clinical", "Technical")
+  ) +
+  scale_size_area(max_size = 14, name = "Count",
+                  labels = scales::comma) +
+  scale_y_log10(
+    breaks = c(1, 5, 10, 30, 60, 120, 300, 600, 1800, 3600),
+    labels = c("1", "5", "10", "30", "60", "120", "300", "600", "1800", "3600")
+  ) +
+  labs(
+    x        = "Dismissal Rate (%)",
+    y        = "Median Time-to-Dismiss (sec, log scale)",
+    color    = "Alarm Class",
+    shape    = "Priority",
+    title    = "Alarm Dismissal Rate vs. Time-to-Dismiss by Parameter",
+    subtitle = "Parameters with n ≥ 10 only. Point size proportional to alarm count."
+  ) +
+  theme_classic(base_size = 12) +
+  theme(legend.position = "right")
+```
