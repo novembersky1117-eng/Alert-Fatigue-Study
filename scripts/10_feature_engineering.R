@@ -75,19 +75,35 @@ cat("優先度分布:\n"); print(table(df_clinical$優先度))
 # 2. alarm_burden の計算（30分ローリングウィンドウ・同一病棟）
 # -----------------------------------------------------------------------------
 
-# --- 2a. 臨床アラームのみの負荷（主解析用） ---
+# --- 2a. 臨床アラームのみの負荷（主解析用・3時間窓） ---
 # 「臨床的判断の対象となるアラーム」に絞った定義。メイン解析に使用。
+# 時間窓ごとに3モデルを並列推定しAIC/BICで最適窓を選択するため、
+# 5分・10分・30分の3変数を一括計算する。
 
 df_clinical <- df_clinical |>
   group_by(ward) |>
   mutate(
-    alarm_burden = slide_index_dbl(
+    burden_5m = slide_index_dbl(
+      .x      = rep(1L, n()),
+      .i      = datetime,
+      .f      = sum,
+      .before = dminutes(5),
+      .after  = 0
+    ) - 1L,    # 自分自身を除外
+    burden_10m = slide_index_dbl(
+      .x      = rep(1L, n()),
+      .i      = datetime,
+      .f      = sum,
+      .before = dminutes(10),
+      .after  = 0
+    ) - 1L,
+    alarm_burden = slide_index_dbl(   # 30分窓・後方互換のため名称維持
       .x      = rep(1L, n()),
       .i      = datetime,
       .f      = sum,
       .before = dminutes(30),
       .after  = 0
-    ) - 1L    # 自分自身を除外
+    ) - 1L
   ) |>
   ungroup()
 
@@ -125,14 +141,20 @@ df_clinical <- df_clinical |>
   ) |>
   select(-burden_total_including_self)
 
-# 確認: alarm_burden の分布
-cat("\n[主解析用] alarm_burden（臨床アラームのみ）の分布:\n")
-cat("  最小値:", min(df_clinical$alarm_burden), "\n")
-cat("  中央値:", median(df_clinical$alarm_burden), "\n")
-cat("  平均値:", round(mean(df_clinical$alarm_burden), 1), "\n")
-cat("  P75   :", quantile(df_clinical$alarm_burden, 0.75), "\n")
-cat("  P95   :", quantile(df_clinical$alarm_burden, 0.95), "\n")
-cat("  最大値:", max(df_clinical$alarm_burden), "\n")
+# 確認: 各時間窓の分布
+summarise_burden <- function(x, label) {
+  cat("\n[主解析用]", label, "の分布:\n")
+  cat("  最小値:", min(x), "\n")
+  cat("  中央値:", median(x), "\n")
+  cat("  平均値:", round(mean(x), 1), "\n")
+  cat("  P75   :", quantile(x, 0.75), "\n")
+  cat("  P95   :", quantile(x, 0.95), "\n")
+  cat("  最大値:", max(x), "\n")
+}
+
+summarise_burden(df_clinical$burden_5m,    "burden_5m（直前5分）")
+summarise_burden(df_clinical$burden_10m,   "burden_10m（直前10分）")
+summarise_burden(df_clinical$alarm_burden, "alarm_burden（直前30分）")
 
 cat("\n[感度分析用] alarm_burden_total（全アラーム）の分布:\n")
 cat("  最小値:", min(df_clinical$alarm_burden_total, na.rm = TRUE), "\n")
