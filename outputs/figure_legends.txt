@@ -32,3 +32,13 @@ Legend:
   Color intensity indicates alarm count per cell (hour × day combination) over the
   57-day observation period. Color scale is unified within each priority row to allow
   direct zone comparison.
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Error bars represent 95% Wilson confidence intervals.
