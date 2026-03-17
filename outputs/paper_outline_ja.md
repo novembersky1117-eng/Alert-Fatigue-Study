@@ -59,3 +59,73 @@
 この再定義は臨床的含意に直結する。もし看護師が優先度に基づいて応答を再配分しているなら、アラーム管理戦略は総量削減ではなく優先度層ごとの最適化を前提とすべきである。具体的には、ADVISORYおよびWARNINGレベルは高負荷下で応答が抑制される層であり、これらの閾値設定や発報条件の見直しが最も介入効果の高い領域として浮かび上がる。一方、CRISISへの応答は現状でも堅牢であり、その維持機序を損なわない設計変更が求められる。
 
 アラーム設計の議論は「鳴らしすぎか否か」という総量論から脱却し、「どの優先度をどの条件で守るか」という層別設計論へ移行すべき時期にある。本研究はその転換を支持する実証的根拠を提供する。
+
+---
+
+## Figure / Table 全体設計（3層構造）
+
+すべてのTable / Figureを以下の3層に対応させ、読者の理解を段階的に積み上げる。
+
+| 層 | 問い | Table | Figure |
+|---|---|---|---|
+| **第1層：環境** | 負荷は存在するか・変動しているか | Table 1：基本特性・負荷分布 | Figure 1：負荷のヒートマップ or 時間帯分布 |
+| **第2層：静的構造** | 優先度による選別はあるか | Table 2：優先度別消音率・応答時間 | Figure 2：優先度別応答の棒グラフ / dotplot |
+| **第3層：動的構造** | 負荷×優先度のinteractionはあるか | Table 3：混合ロジスティック回帰（コア） | Figure 3：Interaction plot（論文の顔） |
+
+### 各パーツの設計メモ
+
+**Table 1（環境・基本特性）**
+- 総アラーム数、日中央値、priority別件数
+- 時間帯・ゾーン別分布（ばらつきがあることを示す）
+- 消音率（全体）
+- ポイント：「負荷が変動している」という前提を支える
+
+**Table 2（優先度別応答：静的構造）**
+- priority別 消音率
+- response time（中央値・IQR）
+- CRISISが"明らかに違う"ことが見えれば十分
+
+**Table 3（混合ロジスティック回帰：コア）**
+- main effects（burden, priority）
+- interaction（burden × priority）
+- OR、95% CI、p値をシンプルに提示
+- モデルの複雑さはFigure 3で補う前提
+
+**Figure 1（負荷の可視化）**
+- ヒートマップか時間帯分布
+- 「負荷は一定ではない」「解析する意味がある」を示す
+- シンプルでよい
+
+**Figure 2（優先度別応答：静的差）**
+- bar or dotplot
+- CRISISは速く・高率、すでに選別が存在することを視覚化
+- Table 2の視覚版
+
+**Figure 3（Interaction plot：最重要）**
+- 横軸：alarm burden / 縦軸：silence probability（予測値）/ 線：priority 3本
+- 見せるべき構造：低優先度 → 傾きあり（負荷で低下）、高優先度 → 傾きほぼなし（維持）
+- 「分岐」が一目で分かれば成功
+
+### Supplementaryの役割
+厚みを出すために使う。本文はシンプルに保つ。
+- Figure S1：時間帯別詳細分布（heatmap by DOW）
+- Figure S2：ゾーン別分布（heatmap by zone）
+- Figure S3：パラメータ別応答散布図
+- Table S1：感度分析（時間窓5/10/30分）
+- Table S2：総負荷（technical含む）感度分析
+
+### 現状の対応マップ
+
+| 新構成 | 現状ファイル | 状態 |
+|---|---|---|
+| Table 1 | `09_exposure_description.R` 出力 | △ ゾーン別・時間帯別のばらつきが薄い |
+| Table 2 | `13_observed_silencing_table.csv` | △ response time（中央値・IQR）が未統合 |
+| Table 3 | `12_table2.csv` | ✓ ほぼそのまま使える |
+| Figure 1 | `fig_heatmap_clinical_by_dow.pdf` | ✓ Supplementaryから昇格 |
+| Figure 2 | なし | ✗ 新規作成が必要 |
+| Figure 3 | `13_interaction_plot.pdf` | △ 予測値ベースへの変更要確認 |
+
+### 最終チェックポイント
+- Figure 3だけ見て結論が分かるか
+- Table 3を見てinteractionが理解できるか
+- Table 1が「負荷の存在」を支えているか
