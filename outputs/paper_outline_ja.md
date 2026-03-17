@@ -129,3 +129,20 @@
 - Figure 3だけ見て結論が分かるか
 - Table 3を見てinteractionが理解できるか
 - Table 1が「負荷の存在」を支えているか
+
+---
+
+## 次回の再開ポイント（2026-03-17時点）
+
+### 完了済み
+- [x] 論文骨格（日本語版）作成・修正（Introduction〜Discussion）
+- [x] Figure/Table 3層構造の設計
+- [x] Figure 3（モデル予測値版）作成 → `scripts/16_figure3_predicted.R`
+  - 連続X軸 + CIリボンで「分岐が一目で分かる」図が完成
+  - 追加発見：CRISISは負荷増加とともに消音率が上昇（55→75%）
+
+### 次にやること（優先順）
+1. **Figure 3の解釈を論文に反映** — CRISISの上昇傾向をDiscussionに追記
+2. **Figure 2の新規作成** — priority別消音率 + response timeのbar/dotplot（静的構造の視覚化）
+3. **Table 2の整備** — `13_observed_silencing_table.csv`にresponse time（中央値・IQR）を追加
+4. **英語化** — `paper_outline_ja.md`を英語に翻訳・推敲
