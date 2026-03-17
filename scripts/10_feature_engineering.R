@@ -234,6 +234,7 @@ cat("\nalarm_burden × priority_fct 中央値:\n")
 df_clinical |>
   group_by(priority_fct) |>
   summarise(
+    
     median_burden = median(alarm_burden),
     mean_burden   = round(mean(alarm_burden), 1),
     .groups = "drop"
