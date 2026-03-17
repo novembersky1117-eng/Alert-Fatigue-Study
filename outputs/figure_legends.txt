@@ -78,6 +78,47 @@ Footnote:
 
 ---
 
+[Figure S1] fig_heatmap_clinical_by_dow
+Title: Temporal distribution of clinical alarms by hour of day and day of week
+Legend:
+  Heatmap showing the distribution of clinical alarms across hours of the day (x-axis, 0–23h)
+  and days of the week (y-axis, Monday to Sunday), stratified by priority level (ADVISORY,
+  WARNING, CRISIS). Each cell represents the total alarm count for that hour–day combination
+  over the 57-day observation period (July 15 – September 9, 2025). Color intensity reflects
+  alarm frequency; higher counts appear in darker shades. Only clinical alarms are included
+  (N = 59,113). Daytime clustering (approximately 08:00–20:00) is apparent across all priority
+  levels, consistent with patient care activity patterns.
+
+---
+
+[Figure S2] fig_heatmap_clinical_by_zone
+Title: Clinical alarm distribution by ward zone, hour of day, and day of week
+Legend:
+  Six-panel heatmap comparing the temporal distribution of clinical alarms between the
+  high-acuity zone (12 beds: 1101-A to E, Re-A/B, W10-01 to 05) and the general zone
+  (29 beds), stratified by priority level (rows: ADVISORY, WARNING, CRISIS) and ward zone
+  (columns: high-acuity, general). Each cell represents the total alarm count for a given
+  hour–day combination over the 57-day observation period. Color scales are unified within
+  each priority row to allow direct zone comparison. The high-acuity zone shows markedly
+  higher ADVISORY and CRISIS alarm density relative to bed count, reflecting the greater
+  clinical complexity of patients in that area.
+
+---
+
+[Figure S3] fig_response_by_parameter
+Title: Silencing rate and time-to-silence by alarm parameter type
+Legend:
+  Scatter plot showing the observed silencing rate (%, x-axis) and median time-to-silence
+  (seconds, y-axis) for each clinical alarm parameter type. Point size reflects the total
+  number of alarms for that parameter. Only parameter types with at least one silenced alarm
+  are shown. Parameters are colored by priority level (ADVISORY: green, WARNING: yellow,
+  CRISIS: red). This figure illustrates the heterogeneity of nursing response across
+  parameter types and highlights that CRISIS-level parameters (e.g., asystole, severe
+  bradycardia) cluster in the high-silencing, short-latency region, consistent with
+  priority-based triage behavior.
+
+---
+
 [Discussion memo] Total burden sensitivity analysis interpretation
   In the sensitivity analysis using alarm_burden_total, the CRISIS × burden interaction was
   statistically significant and positive (OR = 1.009; p = 0.023), in contrast to the
