@@ -42,3 +42,51 @@ and alarm priority (ADVISORY, WARNING, CRISIS).
 Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
 N = 59,113 clinical alarms.
 Error bars represent 95% Wilson confidence intervals.
+
+---
+
+[Table S1] tableS1_sensitivity_EN.csv
+Title: Sensitivity analysis of mixed-effects logistic regression results across alarm burden time windows
+Footnote:
+  Results of mixed-effects logistic regression models with bed-level random intercepts, estimated
+  using three definitions of alarm burden: the number of clinical alarms in the same ward in the
+  preceding 5, 10, or 30 minutes (excluding the index alarm). The outcome is nurse-initiated alarm
+  silencing (yes/no). Interaction terms test whether the effect of alarm burden on silencing
+  probability differs by priority level. The 30-minute window was selected as the primary analysis
+  window based on the lowest AIC (31,653.3) and clinical plausibility (30 minutes approximates a
+  typical nursing care cycle). Results were consistent across all time windows: CRISIS alarms showed
+  no significant attenuation of silencing response with increasing burden (p = 0.290–0.999), whereas
+  WARNING alarms showed a significant negative association in all windows (p = 0.014–0.029),
+  supporting the robustness of the primary findings.
+  OR = odds ratio; CI = confidence interval; AIC = Akaike information criterion.
+  N = 59,113 clinical alarms (July 15 – September 9, 2025).
+
+---
+
+[Table S2] tableS2_total_burden_EN.csv
+Title: Sensitivity analysis using total alarm burden (clinical + technical alarms combined)
+Footnote:
+  The primary analysis used clinical-only alarm burden (alarm_burden) as the exposure variable,
+  defined as the number of clinical alarms in the same ward in the preceding 30 minutes.
+  This sensitivity analysis substitutes total alarm burden (alarm_burden_total), which includes
+  both clinical and technical alarms. Technical alarms do not produce audible alerts at the
+  bedside in this ward setting and therefore do not directly contribute to the auditory cognitive
+  load experienced by nursing staff; alarm_burden_total should be interpreted as a ward-level
+  workload indicator rather than a measure of perceived alarm noise.
+  OR = odds ratio; CI = confidence interval; AIC = Akaike information criterion.
+  N = 59,113 clinical alarms (July 15 – September 9, 2025).
+
+---
+
+[Discussion memo] Total burden sensitivity analysis interpretation
+  In the sensitivity analysis using alarm_burden_total, the CRISIS × burden interaction was
+  statistically significant and positive (OR = 1.009; p = 0.023), in contrast to the
+  primary analysis (OR = 1.000; p = 0.999). This finding is likely attributable to
+  confounding by patient acuity: technical alarms in this ward predominantly reflect
+  device-related events such as SpO2 probe disconnection, which occur more frequently in
+  higher-acuity patients. Consequently, a higher technical alarm count may serve as a proxy
+  for a more critically ill patient population, in whom nurses are inherently more vigilant
+  and more likely to respond to CRISIS-level alerts. This interpretation is consistent with
+  the ward-level observation that technical alarms are perceived as ambient background noise
+  rather than actionable stimuli — a phenomenon that further supports the use of
+  clinical-only burden as the primary exposure variable in this study.
