@@ -85,18 +85,34 @@ fig2 <- function(base_sz, bold) {
       y    = "Number of Alarms (per day)",
       fill = "Alarm Type"
     ) +
-    theme_classic(base_size = base_sz) +
+    theme_minimal(base_size = base_sz, base_family = "Helvetica") +
     theme(
-      axis.title   = element_text(face = face),
-      axis.text    = element_text(face = face),
-      legend.title = element_text(face = face),
-      legend.text  = element_text(face = face),
-      axis.line    = element_line(linewidth = if (bold) 1.2 else 0.5),
-      legend.position = "top"
+      panel.grid      = element_blank(),
+      axis.title      = element_text(face = face),
+      axis.text       = element_text(size = if (bold) NULL else 7),
+      legend.title    = element_text(face = face),
+      legend.text     = element_text(face = face),
+      axis.line         = element_line(linewidth = if (bold) 1.2 else 0.5),
+      legend.position   = c(0.85, 0.95),
+      legend.background = element_rect(fill = "white", color = NA),
+      legend.key.size   = unit(if (bold) 0.5 else 0.3, "cm")
     )
 }
 
-save_both(fig2, "fig2_hourly_alarm_type")
+dir.create("outputs/figures/journal/Figure1A",       showWarnings = FALSE, recursive = TRUE)
+dir.create("outputs/figures/presentation/Figure1A",  showWarnings = FALSE, recursive = TRUE)
+
+ggsave(
+  "outputs/figures/journal/Figure1A/fig2_hourly_alarm_type_journal.pdf",
+  plot   = fig2(base_sz = 9, bold = FALSE),
+  device = cairo_pdf, width = 3.5, height = 2.625
+)
+ggsave(
+  "outputs/figures/presentation/Figure1A/fig2_hourly_alarm_type_presentation.pdf",
+  plot   = fig2(base_sz = 22, bold = TRUE),
+  device = cairo_pdf, width = 10, height = 6
+)
+cat("保存完了: fig2_hourly_alarm_type\n")
 
 # =============================================================================
 # Figure 3: duration分布（消音あり vs なし）
