@@ -131,3 +131,263 @@ Legend:
   the ward-level observation that technical alarms are perceived as ambient background noise
   rather than actionable stimuli — a phenomenon that further supports the use of
   clinical-only burden as the primary exposure variable in this study.
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Shaded ribbons represent 95% Wilson confidence intervals.
+Numbers adjacent to each point indicate the sample size (n) per cell.
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Shaded ribbons represent 95% Wilson confidence intervals.
+Numbers adjacent to each point indicate the sample size (n) per cell.
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Shaded ribbons represent 95% Wilson confidence intervals.
+Numbers adjacent to each point indicate the sample size (n) per cell.
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Shaded ribbons represent 95% Wilson confidence intervals.
+Numbers adjacent to each point indicate the sample size (n) per cell.
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Shaded ribbons represent 95% Wilson confidence intervals.
+Numbers adjacent to each point indicate the sample size (n) per cell.
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Shaded ribbons represent 95% Wilson confidence intervals.
+Numbers adjacent to each point indicate the sample size (n) per cell.
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Shaded ribbons represent 95% Wilson confidence intervals.
+Numbers adjacent to each point indicate the sample size (n) per cell.
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Shaded ribbons represent 95% Wilson confidence intervals.
+Numbers adjacent to each point indicate the sample size (n) per cell.
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Shaded ribbons represent 95% Wilson confidence intervals.
+Numbers adjacent to each point indicate the sample size (n) per cell.
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Shaded ribbons represent 95% Wilson confidence intervals.
+Numbers adjacent to each point indicate the sample size (n) per cell.
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+## fig_heatmap_clinical_by_dow
+Title: Clinical Alarms by Hour of Day and Day of Week
+Legend:
+  Heatmap showing the distribution of clinical alarms across hours of the day (x-axis)
+  and days of the week (y-axis, Monday to Sunday). Each cell represents the total alarm
+  count over the 57-day observation period (2025/7/15 – 9/9). Three panels correspond
+  to alarm priority levels: ADVISORY (green), WARNING (yellow), and CRISIS (red).
+  Only clinical alarms (alarm_class == 'clinical') are included.
+
+---
+[Figure 2] 14_figure2_static_response
+Title: Alarm silencing rate and time-to-silence by alarm priority level
+
+(A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
+level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
+interquartile range (IQR) among silenced alarms, by priority level.
+N = 59,113 clinical alarms (Panel A);
+n = 4,845 silenced alarms (Panel B).
+
+---
+Figure [X]: Alarm silencing rate by alarm burden quartile and priority level
+
+Observed silencing rates (%) with 95% Wilson confidence intervals are shown
+for each combination of alarm burden quartile (Q1–Q4, preceding 30 minutes)
+and alarm priority (ADVISORY, WARNING, CRISIS).
+Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alarms/30 min.
+N = 59,113 clinical alarms.
+Shaded ribbons represent 95% Wilson confidence intervals.
+Numbers adjacent to each point indicate the sample size (n) per cell.

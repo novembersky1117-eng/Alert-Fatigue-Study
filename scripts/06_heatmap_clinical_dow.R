@@ -67,7 +67,7 @@ make_heatmap <- function(data, priority, high_color, panel_label) {
       x     = NULL,
       y     = NULL
     ) +
-    theme_minimal(base_size = 9) +
+    theme_minimal(base_size = 9, base_family = "Helvetica") +
     theme(
       plot.title      = element_text(face = "bold", size = 9),
       panel.grid      = element_blank(),
@@ -93,6 +93,7 @@ p_combined <- p_advisory / p_warning / p_crisis +
     title    = "Clinical Alarms by Hour of Day and Day of Week",
     subtitle = "Observation period: 2025/7/15 – 9/9 (57 days), clinical alarms only",
     theme    = theme(
+      text          = element_text(family = "Helvetica"),
       plot.title    = element_text(face = "bold", size = 10),
       plot.subtitle = element_text(size = 8, color = "gray40")
     )
