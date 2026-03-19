@@ -91,7 +91,7 @@ print(panel_b_data)
 # -----------------------------------------------------------------------------
 
 priority_colors <- c(
-  "ADVISORY" = "#2ca02c",
+  "ADVISORY" = "#999999",
   "WARNING"  = "#E69F00",
   "CRISIS"   = "#D55E00"
 )
@@ -136,7 +136,7 @@ make_plot <- function(base_size, point_size, line_size) {
       legend.title     = element_text(face = "bold"),
       axis.text.x      = element_blank(),
       axis.ticks.x     = element_blank(),
-      plot.margin      = margin(t = 8, r = 2, b = 0, l = 6)
+      plot.margin      = margin(t = 14, r = 2, b = 0, l = 6)
     )
 
   # 下段：応答時間（上マージン=0）
@@ -161,7 +161,7 @@ make_plot <- function(base_size, point_size, line_size) {
 # 5. 保存（journal / presentation）
 # -----------------------------------------------------------------------------
 
-p_journal <- make_plot(base_size = 9, point_size = 1.8, line_size = 0.5)
+p_journal <- make_plot(base_size = 8, point_size = 1.8, line_size = 0.5)
 
 cairo_pdf("outputs/figures/journal/14_figure2_static_response.pdf",
           width = 3.5, height = 4)
@@ -195,3 +195,4 @@ legend_text <- paste0(
 
 cat(legend_text, file = "outputs/figure_legends.txt", append = TRUE)
 cat("figure_legends.txt に追記完了\n")
+

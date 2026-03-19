@@ -77,8 +77,13 @@ plot_data <- df_model |>
     # N数ラベルの配置: CRISISはリボン下、WARNINGはリボン上、ADVISORYはグラフ下部固定
     n_y = case_when(
       priority_fct == "CRISIS"   ~ ci_low_pct  - 4,
-      priority_fct == "ADVISORY" ~ 0,
-      TRUE                       ~ ci_high_pct + 6
+      priority_fct == "WARNING"   ~ ci_low_pct  - 4,
+      priority_fct == "ADVISORY" ~ -1,
+
+
+
+      
+      TRUE                       ~ ci_high_pct + 3
     )
   )
 
@@ -107,7 +112,7 @@ plot_data <- plot_data |>
 # -----------------------------------------------------------------------------
 
 priority_colors <- c(
-  "ADVISORY" = "#2ca02c",   # green (unified with Figure 1)
+  "ADVISORY" = "#999999",   # gray
   "WARNING"  = "#E69F00",   # orange
   "CRISIS"   = "#D55E00"    # red
 )
@@ -163,7 +168,7 @@ make_plot <- function(base_size, point_size, line_size, text_size) {
       y     = "Silencing rate (%)",
       title = NULL
     ) +
-    theme_bw(base_size = base_size, base_family = "Helvetica") +
+    theme_bw(base_size = base_size) +
     theme(
       legend.position  = "top",
       legend.title     = element_text(face = "bold"),
@@ -178,7 +183,7 @@ make_plot <- function(base_size, point_size, line_size, text_size) {
 # -----------------------------------------------------------------------------
 
 # journal: 3.5 × 3.5 inch
-p_journal <- make_plot(base_size = 9, point_size = 1.8,
+p_journal <- make_plot(base_size = 8, point_size = 1.8,
                        line_size = 0.5, text_size = 1.8)
 
 cairo_pdf("outputs/figures/journal/13_interaction_plot.pdf",
