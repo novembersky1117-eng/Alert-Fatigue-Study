@@ -1,15 +1,17 @@
 ---
 marp: true
-theme: gaia
+theme: default
 paginate: true
-backgroundColor: #fff
-color: #333
+backgroundColor: #ffffff
+color: #334155
 style: |
   section {
     font-family: 'Helvetica Neue', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
-    font-size: 28px;
-    padding: 40px 60px;
+    font-size: 24px; /* 28pxから縮小 */
+    padding: 30px 50px; /* 余白を減らして広く使えるように */
   }
+  
+  /* タイトルスライド */
   section.lead {
     text-align: left;
     display: flex;
@@ -18,116 +20,133 @@ style: |
     align-items: flex-start;
   }
   section.lead h1 {
-    font-size: 48px;
-    color: #1a365d;
+    font-size: 42px; /* 48pxから縮小 */
+    color: #0f172a; /* ほぼ黒に近いネイビー */
+    border-bottom: none;
   }
   section.lead h2 {
-    font-size: 34px;
-    color: #4a5568;
+    font-size: 30px; /* 34pxから縮小 */
+    color: #475569;
     font-weight: normal;
   }
+  
+  /* セクション区切りスライド */
   section.section-divider {
-    background: #fff;
-    color: #333;
+    background: #f8fafc; 
+    color: #334155;
     text-align: left;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-left: 100px;
+    padding-left: 80px;
+    border-left: 12px solid #1e3a8a; /* 重厚なダークネイビー */
   }
   section.section-divider h1 {
-    font-size: 50px;
-    color: #1a365d;
+    font-size: 44px; /* 50pxから縮小 */
+    color: #0f172a;
     border: none;
     margin-bottom: 10px;
   }
   section.section-divider h2 {
-    font-size: 32px;
-    color: #2b6cb0;
+    font-size: 28px; /* 32pxから縮小 */
+    color: #334155;
     font-weight: normal;
   }
+  
+  /* 見出し（通常スライド） */
   h1 {
-    font-size: 40px;
-    color: #1a365d;
-    border-bottom: 3px solid #2b6cb0;
+    font-size: 36px; /* 40pxから縮小 */
+    color: #0f172a; 
+    border-bottom: 3px solid #1e3a8a; /* 重厚なネイビーのアンダーライン */
     padding-bottom: 8px;
     margin-bottom: 20px;
   }
   h2 {
-    font-size: 32px;
-    color: #2b6cb0;
+    font-size: 28px; /* 32pxから縮小 */
+    color: #1e40af; /* 落ち着いたトーンのブルー */
     margin-bottom: 12px;
   }
   h3 {
-    font-size: 28px;
-    color: #4a5568;
+    font-size: 24px; /* 28pxから縮小 */
+    color: #475569; 
   }
+  
+  /* 強調・装飾 */
   strong {
-    color: #da5a5aff;
+    color: #1e3a8a; /* 重厚なネイビー */
+    font-weight: 600;
   }
+  a {
+    color: #1e40af; 
+    text-decoration: none;
+  }
+  code {
+    color: #1e3a8a;
+    background: #f1f5f9; 
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+  
+  /* 表（テーブル）のデザイン */
   table {
-    width: 88%;
-    font-size: 20px;
+    width: 90%;
+    font-size: 18px; /* 20pxから縮小 */
     margin: 16px auto;
     border-collapse: collapse !important;
     border: none !important;
     background-color: transparent !important;
   }
   th {
-    background: transparent !important;
-    color: #1a365d !important;
-    padding: 10px 16px;
+    background: #f8fafc !important; 
+    color: #0f172a !important;
+    padding: 8px 14px;
     border: none !important;
-    border-top: 2px solid #555 !important;
-    border-bottom: 1px solid #555 !important;
+    border-top: 3px solid #1e3a8a !important; /* 重厚なネイビーの太線 */
+    border-bottom: 1px solid #94a3b8 !important; /* 少し濃いグレーで引き締め */
     font-weight: bold;
     text-align: center;
   }
-  th:first-child {
+  th:first-child, td:first-child {
     text-align: left;
   }
   td {
-    padding: 8px 16px;
+    padding: 6px 14px; /* 上下余白を詰める */
     border: none !important;
-    color: #333;
+    border-bottom: 1px solid #cbd5e1 !important; 
+    color: #334155;
     text-align: center;
     background: transparent !important;
   }
-  td:first-child {
-    text-align: left;
-  }
   tr:last-child td {
-    border-bottom: 2px solid #555 !important;
+    border-bottom: 3px solid #1e3a8a !important; /* 下部も重厚なネイビーで締める */
   }
-  tr:nth-child(even) td {
-    background: transparent !important;
-  }
+  
+  /* 引用（ブロッククオート） */
   blockquote {
-    background: transparent !important;
-    border: none !important;
-    border-left: 4px solid #2b6cb0 !important;
-    padding: 8px 20px !important;
-    margin: 12px 0 !important;
-    font-size: 26px;
-    border-radius: 0 !important;
-    color: #2b6cb0 !important;
+    background: #f8fafc;
+    border-left: 5px solid #1e40af; /* 落ち着いたネイビー */
+    padding: 12px 18px;
+    margin: 12px 0;
+    font-size: 22px; /* 26pxから縮小 */
+    border-radius: 0 8px 8px 0;
   }
   blockquote strong {
-    color: #1a365d !important;
+    color: #0f172a;
   }
-  blockquote p {
-    color: #2b6cb0 !important;
-  }
+  
+  /* 画像・リスト・フッター */
   img {
     display: block;
     margin: 0 auto;
-    border-radius: 4px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
   }
-  ul { margin: 4px 0; }
-  li { margin: 4px 0; line-height: 1.6; }
+  ul, ol { margin: 4px 0; padding-left: 30px; }
+  li { margin: 4px 0; line-height: 1.5; }
   footer {
-    font-size: 16px;
-    color: #a0aec0;
+    font-size: 14px; /* 16pxから縮小 */
+    color: #94a3b8;
   }
 ---
 
@@ -156,7 +175,7 @@ style: |
 
 ## 理論的背景
 
-- **Safety-II / Resilience Engineering**
+- Safety-II / Resilience Engineering
 - 「なぜ失敗するか」ではなく「なぜうまくいっているか」を問う
 - High Reliability Organizationの視点
 
@@ -190,7 +209,7 @@ style: |
 
 ---
 
-# Table 1a｜全アラームの特性
+# Table 1A｜全アラームの特性
 
 | 特性 | 全アラーム | 技術的 | 臨床的 |
 |---|---|---|---|
@@ -209,17 +228,17 @@ style: |
 
 # Figure 1A｜時間帯別アラーム種別
 
-![w:820](../figures/journal/Figure1A/fig2_hourly_alarm_type_journal.png)
+![w:410](../figures/journal/Figure1A/fig2_hourly_alarm_type_journal.png)
 
 ---
 
 # Figure 1B｜臨床アラームの時間帯×曜日パターン
 
-![w:820](../figures/journal/Figure1B/fig_heatmap_clinical_by_dow.png)
+![w:410](../figures/journal/Figure1B/fig_heatmap_clinical_by_dow.png)
 
 ---
 
-# Table 1b｜臨床アラーム：優先度別内訳
+# Table 1B｜臨床アラーム：優先度別内訳
 
 | 特性 | ADVISORY | WARNING | CRISIS |
 |---|---|---|---|
@@ -237,8 +256,8 @@ style: |
 
 <!-- _class: section-divider -->
 
-# 解析手法
-## 方法の解説 ── 混合ロジスティック回帰
+# 解析手法について
+## 方法の説明 ── 混合ロジスティック回帰
 
 ---
 
@@ -265,7 +284,7 @@ style: |
 
 # Figure S2｜各ベッドのランダム切片分布
 
-![w:820](../figures/journal/FigureS2/fig_s2_random_effects.png)
+![w:410](../figures/journal/FigureS2/fig_s2_random_effects.png)
 
 *各ベッドの「消音しやすさの補正値」の実際の分布。分散 = 0.302。ベッドごとにばらつきがあることが確認できる。*
 
@@ -298,7 +317,7 @@ style: |
 
 ## 定義の恣意性をどう担保したか
 
-- 「直前X分のアラーム件数」の X は恣意的 → 5分 / 10分 / 30分 で検証
+- 「直前x分のアラーム件数」のxは恣意的 → 5分 / 10分 / 30分 で検証
 - 結果が窓サイズに依存するなら解釈の信頼性が揺らぐ
 
 ## 感度分析の結果
@@ -335,7 +354,7 @@ style: |
 |---|---|---|---|---|
 | ADVISORY | 3.3%（n=777） | 2.8%（n=394） | 5.2%（n=271） | 4.8%（n=207） |
 | WARNING | **10.6%**（n=13,921） | 8.4%（n=14,329） | 7.6%（n=14,455） | **5.8%**（n=14,537） |
-| CRISIS | 70.4%（n=81） | 69.1%（n=55） | 76.9%（n=52） | **67.6%**（n=34） |
+| CRISIS | 70.4%（n=81） | 69.1%（n=55） | 76.9%（n=52） | 67.6%（n=34） |
 
 > WARNINGは低負荷時10.6% → 高負荷時5.8%へ**45%相対低下**。
 > CRISISは全四分位を通じて**67–77%を維持**。
@@ -344,7 +363,7 @@ style: |
 
 # Figure 3｜メイン発見：負荷×優先度 交互作用プロット
 
-![w:820](../figures/journal/FIgure3/13_interaction_plot.png)
+![w:500](../figures/journal/FIgure3/13_interaction_plot.png)
 
 ---
 
