@@ -391,3 +391,12 @@ Alarm burden quartiles: Q1 = 0–9, Q2 = 9–18, Q3 = 18–31, Q4 = 31–97 alar
 N = 59,113 clinical alarms.
 Shaded ribbons represent 95% Wilson confidence intervals.
 Numbers adjacent to each point indicate the sample size (n) per cell.
+
+## fig_heatmap_by_class
+Title: Alarms by Hour of Day and Day of Week
+Legend:
+  Heatmap showing the distribution of all alarms across hours of the day (x-axis)
+  and days of the week (y-axis, Monday to Sunday). Each cell represents the total alarm
+  count over the 57-day observation period (2025/7/15 – 9/9). Two panels correspond
+  to alarm class: Technical (yellow, upper) and Clinical (blue, lower).
+  Color scales are independent between panels to reflect the difference in total counts.
