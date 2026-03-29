@@ -164,7 +164,7 @@ make_plot <- function(base_size, point_size, line_size) {
       axis.title.y     = element_text(margin = margin(r = 3))
     )
 
-  # Panel A: 消音率（X軸非表示）
+  # Panel A: 消音率（凡例なし）
   pA <- ggplot(panel_a_data,
                aes(x = priority_fct, y = prop_pct,
                    color = priority_fct, shape = priority_fct)) +
@@ -178,18 +178,19 @@ make_plot <- function(base_size, point_size, line_size) {
       breaks = seq(0, 100, 20),
       labels = paste0(seq(0, 100, 20), "%")
     ) +
-    labs(x = NULL, y = "Silencing rate (%)") +
+    labs(x = "Alarm priority", y = "Silencing rate (%)") +
     base_theme +
     theme(
-      legend.position = "top",
-      legend.title    = element_text(face = "bold"),
-      axis.text.x     = element_blank(),
-      axis.ticks.x    = element_blank(),
-      plot.margin     = margin(t = 14, r = 2, b = 0, l = 6)
+      plot.margin = margin(6, 6, 6, 6)
     )
 
-  # Panel B: 応答時間（X軸非表示）
-  pB <- ggplot(panel_b_data,
+  # Panel B: 応答時間（WARNING・CRISISのみ、ADVISORY除外）
+  # ADVISORY は silenced=61件のみで IQR[12-69s] が不安定なため除外
+  # キャプションに記載: "ADVISORY: n=61, median 19 [IQR 12–69] s"
+  panel_b_data_plot <- panel_b_data |>
+    filter(priority_fct != "ADVISORY")
+
+  pB <- ggplot(panel_b_data_plot,
                aes(x = priority_fct, y = med,
                    color = priority_fct, shape = priority_fct)) +
     geom_errorbar(aes(ymin = q25, ymax = q75),
@@ -197,16 +198,13 @@ make_plot <- function(base_size, point_size, line_size) {
     geom_point(size = point_size) +
     scale_color_manual(values = priority_colors, guide = "none") +
     scale_shape_manual(values = priority_shapes, guide = "none") +
-    scale_y_continuous(limits = c(0, NA)) +
-    labs(x = NULL, y = "Time-to-silence (sec)\nMedian [IQR]") +
+    scale_y_continuous(breaks = c(0, 10, 20, 30, 40)) +
+    coord_cartesian(ylim = c(0, 45)) +
+    labs(x = "Alarm priority", y = "Time-to-silence (sec)\nMedian [IQR]") +
     base_theme +
-    theme(
-      axis.text.x  = element_blank(),
-      axis.ticks.x = element_blank(),
-      plot.margin  = margin(t = 0, r = 2, b = 0, l = 6)
-    )
+    theme(plot.margin = margin(6, 6, 6, 6))
 
-  # Panel C: 再発率（X軸表示）
+  # Panel C: 再発率
   pC <- ggplot(panel_c_data,
                aes(x = priority_fct, y = prop_pct,
                    color = priority_fct, shape = priority_fct)) +
@@ -220,30 +218,31 @@ make_plot <- function(base_size, point_size, line_size) {
       breaks = seq(0, 100, 20),
       labels = paste0(seq(0, 100, 20), "%")
     ) +
-    labs(x = "Alarm priority",
-         y = "Post-silence recurrence\nrate (%)") +
+    labs(x = "Alarm priority", y = "Post-silence recurrence\nrate (%)") +
     base_theme +
-    theme(plot.margin = margin(t = 0, r = 2, b = 2, l = 6))
+    theme(plot.margin = margin(6, 6, 6, 6))
 
-  pA / pB / pC + plot_layout(heights = c(1, 1, 1))
+  # L字レイアウト（2×2グリッド、右下に凡例収集）
+  (pA + pB + pC + guide_area()) +
+    plot_layout(ncol = 2, guides = "collect")
 }
 
 # -----------------------------------------------------------------------------
 # 7. 保存（journal / presentation）
 # -----------------------------------------------------------------------------
 
-p_journal <- make_plot(base_size = 8, point_size = 1.8, line_size = 0.5)
+p_journal <- make_plot(base_size = 8, point_size = 2.5, line_size = 0.3)
 
 cairo_pdf("outputs/figures/journal/14_figure2_static_response.pdf",
-          width = 3.5, height = 6)
+          width = 7, height = 5.5)
 print(p_journal)
 dev.off()
 cat("保存: outputs/figures/journal/14_figure2_static_response.pdf\n")
 
-p_pres <- make_plot(base_size = 18, point_size = 4, line_size = 1.2)
+p_pres <- make_plot(base_size = 18, point_size = 5, line_size = 0.8)
 
 cairo_pdf("outputs/figures/presentation/14_figure2_static_response.pdf",
-          width = 10, height = 18)
+          width = 10, height = 8)
 print(p_pres)
 dev.off()
 cat("保存: outputs/figures/presentation/14_figure2_static_response.pdf\n")

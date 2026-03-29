@@ -150,12 +150,15 @@ Title: Alarm silencing rate, time-to-silence, and post-silence recurrence by ala
 Legend:
   (A) Observed silencing rates (%) with 95% Wilson confidence intervals by alarm priority
   level (ADVISORY, WARNING, CRISIS). (B) Median time-to-silence (seconds) with
-  interquartile range (IQR) among silenced alarms, by priority level. (C) Post-silence
-  recurrence rate (%) with 95% Wilson confidence intervals, defined as the proportion of
-  silenced alarms followed by a recurrence of the same parameter at the same bed within
-  5 minutes. Panels B and C are restricted to silenced alarms.
+  interquartile range (IQR) among silenced alarms, by priority level; ADVISORY alarms
+  (n = 61; median 19 [IQR 12–69] s) are shown in Panels A and C only, as the small
+  sample size precluded reliable IQR estimation. (C) Post-silence recurrence rate (%) with
+  95% Wilson confidence intervals, defined as the proportion of silenced alarms followed
+  by a recurrence of the same parameter at the same bed within 5 minutes. Panels B and C
+  are restricted to silenced alarms.
   N = 59,113 clinical alarms (Panel A);
-  n = 4,845 silenced alarms (Panels B and C).
+  n = 4,845 silenced alarms (Panel C);
+  n = 4,784 silenced alarms (Panel B, ADVISORY excluded).
 
 ---
 
