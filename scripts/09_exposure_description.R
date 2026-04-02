@@ -242,9 +242,9 @@ table1_clin_JA <- build_table1_clinical(
 # 5. 保存
 # -----------------------------------------------------------------------------
 
-# 英語版: write_csv（BOMなし・標準UTF-8）
-write_csv(table1_main_EN, "outputs/stats/table1_main_EN.csv")
-write_csv(table1_clin_EN, "outputs/stats/table1_clinical_EN.csv")
+# 英語版: write_excel_csv（UTF-8 BOM付き → Excelで文字化けしない）
+write_excel_csv(table1_main_EN, "outputs/stats/table1_main_EN.csv")
+write_excel_csv(table1_clin_EN, "outputs/stats/table1_clinical_EN.csv")
 
 # 日本語版: write_excel_csv（UTF-8 BOM付き → Excelで文字化けしない）
 write_excel_csv(table1_main_JA, "outputs/stats/table1_main_JA.csv")
