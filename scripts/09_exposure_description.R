@@ -71,10 +71,12 @@ fmt_median_iqr <- function(x) {
 # 2. 列ごとの統計量を計算する関数
 # -----------------------------------------------------------------------------
 
-make_col_stats <- function(d, total_n) {
+make_col_stats <- function(d, total_n, clin_n = NA) {
   n <- nrow(d)
+  snr <- if (!is.na(clin_n)) paste0(round(clin_n / total_n * 100, 1), "% clinical") else "—"
   list(
     n_pct     = fmt_n_pct(n, total_n),
+    snr       = snr,
     density   = as.character(round(n / N_BEDS / N_DAYS, 1)),
     advisory  = fmt_n_pct(sum(d$優先度 == "ADVISORY"), n),
     warning   = fmt_n_pct(sum(d$優先度 == "WARNING"),  n),
@@ -86,7 +88,8 @@ make_col_stats <- function(d, total_n) {
 }
 
 total_n    <- nrow(df)
-all_s      <- make_col_stats(df,                                    total_n)
+clin_n     <- sum(df$alarm_class == "clinical")
+all_s      <- make_col_stats(df,                                    total_n, clin_n = clin_n)
 tech_s     <- make_col_stats(filter(df, alarm_class == "technical"), total_n)
 clin_s     <- make_col_stats(filter(df, alarm_class == "clinical"),  total_n)
 
@@ -99,6 +102,7 @@ build_table1_main <- function(all_s, tech_s, clin_s,
   tibble(
     Characteristic = c(
       "Events, n (%)",
+      "Signal-to-noise ratio",
       "Alarm density (/bed/day)",
       "Priority",
       "  ADVISORY, n (%)",
@@ -110,9 +114,9 @@ build_table1_main <- function(all_s, tech_s, clin_s,
       "Alarm duration",
       "  Duration, median [IQR], sec"
     ),
-    !!col_all  := c(all_s$n_pct,  all_s$density,  "", all_s$advisory,  all_s$warning,  all_s$crisis,  "", all_s$dismissed,  all_s$ttd,  "", all_s$duration),
-    !!col_tech := c(tech_s$n_pct, tech_s$density, "", tech_s$advisory, tech_s$warning, tech_s$crisis, "", tech_s$dismissed, tech_s$ttd, "", tech_s$duration),
-    !!col_clin := c(clin_s$n_pct, clin_s$density, "", clin_s$advisory, clin_s$warning, clin_s$crisis, "", clin_s$dismissed, clin_s$ttd, "", clin_s$duration)
+    !!col_all  := c(all_s$n_pct,  all_s$snr,  all_s$density,  "", all_s$advisory,  all_s$warning,  all_s$crisis,  "", all_s$dismissed,  all_s$ttd,  "", all_s$duration),
+    !!col_tech := c(tech_s$n_pct, tech_s$snr, tech_s$density, "", tech_s$advisory, tech_s$warning, tech_s$crisis, "", tech_s$dismissed, tech_s$ttd, "", tech_s$duration),
+    !!col_clin := c(clin_s$n_pct, clin_s$snr, clin_s$density, "", clin_s$advisory, clin_s$warning, clin_s$crisis, "", clin_s$dismissed, clin_s$ttd, "", clin_s$duration)
   )
 }
 
@@ -133,6 +137,7 @@ table1_main_JA <- build_table1_main(
   ) |>
   mutate(項目 = recode(項目,
     "Events, n (%)"                          = "件数, n (%)",
+    "Signal-to-noise ratio"                  = "臨床アラーム割合（全件中）",
     "Alarm density (/bed/day)"               = "アラーム密度（件/床/日）",
     "Priority"                               = "優先度",
     "  ADVISORY, n (%)"                      = "  ADVISORY, n (%)",
@@ -153,21 +158,39 @@ clin_df     <- filter(df, alarm_class == "clinical")
 total_clin  <- nrow(clin_df)
 
 make_priority_stats <- function(d, all_n, clin_n) {
-  n <- nrow(d)
+  n        <- nrow(d)
+  sil_n    <- sum(d$silenced)
+  ttd_vals <- d$response_sec[d$silenced]
+  dur_vals <- d$duration_sec
   list(
-    n_of_clin   = fmt_n_pct(n, clin_n),
-    n_of_all    = fmt_n_pct(n, all_n),    # 針の目指標
-    dismissed   = fmt_n_pct(sum(d$silenced), n),
-    ttd         = fmt_median_iqr(d$response_sec[d$silenced]),
-    duration    = fmt_median_iqr(d$duration_sec),
-    high_acuity = fmt_n_pct(sum(d$ゾーン == "高重症", na.rm = TRUE), n),
-    general     = fmt_n_pct(sum(d$ゾーン == "一般",   na.rm = TRUE), n)
+    n_of_clin         = fmt_n_pct(n, clin_n),
+    n_of_all          = fmt_n_pct(n, all_n),    # 針の目指標
+    dismissed         = fmt_n_pct(sil_n, n),
+    dismissed_pct_raw = sil_n / n * 100,
+    ttd               = fmt_median_iqr(ttd_vals),
+    ttd_med_raw       = median(ttd_vals, na.rm = TRUE),
+    duration          = fmt_median_iqr(dur_vals),
+    dur_med_raw       = median(dur_vals, na.rm = TRUE),
+    high_acuity       = fmt_n_pct(sum(d$ゾーン == "高重症", na.rm = TRUE), n),
+    general           = fmt_n_pct(sum(d$ゾーン == "一般",   na.rm = TRUE), n)
   )
 }
 
 adv_s <- make_priority_stats(filter(clin_df, 優先度 == "ADVISORY"), total_n, total_clin)
 war_s <- make_priority_stats(filter(clin_df, 優先度 == "WARNING"),  total_n, total_clin)
 cri_s <- make_priority_stats(filter(clin_df, 優先度 == "CRISIS"),   total_n, total_clin)
+
+# CRISIS − WARNING 差分ベクトル（行順: n_of_clin, n_of_all, dismissed, ttd, duration, zone, high, general）
+cri_war_diff <- c(
+  "—",
+  "—",
+  paste0(sprintf("%+.1f", cri_s$dismissed_pct_raw - war_s$dismissed_pct_raw), " %pt"),
+  paste0(sprintf("%+.0f", cri_s$ttd_med_raw       - war_s$ttd_med_raw),       " sec"),
+  paste0(sprintf("%+.0f", cri_s$dur_med_raw        - war_s$dur_med_raw),       " sec"),
+  "—",
+  "—",
+  "—"
+)
 
 build_table1_clinical <- function(adv_s, war_s, cri_s,
                                    row_clin, row_all,
@@ -197,7 +220,8 @@ table1_clin_EN <- build_table1_clinical(
   row_high      = "  High-acuity zone, n (%)",
   row_general   = "  General zone, n (%)",
   col_adv = "ADVISORY", col_war = "WARNING", col_cri = "CRISIS"
-)
+) |>
+  mutate(`CRISIS - WARNING` = cri_war_diff)
 
 table1_clin_JA <- build_table1_clinical(
   adv_s, war_s, cri_s,
@@ -211,6 +235,7 @@ table1_clin_JA <- build_table1_clinical(
   row_general   = "  一般ゾーン, n (%)",
   col_adv = "ADVISORY", col_war = "WARNING", col_cri = "CRISIS"
 ) |>
+  mutate(`CRISIS - WARNING` = cri_war_diff) |>
   rename("項目" = Characteristic)
 
 # -----------------------------------------------------------------------------
