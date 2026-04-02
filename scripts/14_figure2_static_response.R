@@ -222,9 +222,10 @@ make_plot <- function(base_size, point_size, line_size) {
     base_theme +
     theme(plot.margin = margin(6, 6, 6, 6))
 
-  # L字レイアウト（2×2グリッド、右下に凡例収集）
-  (pA + pB + pC + guide_area()) +
-    plot_layout(ncol = 2, guides = "collect")
+  # 横並び1×3レイアウト（凡例は下部に収集）
+  (pA + pB + pC) +
+    plot_layout(ncol = 3, guides = "collect") &
+    theme(legend.position = "bottom")
 }
 
 # -----------------------------------------------------------------------------
@@ -234,7 +235,7 @@ make_plot <- function(base_size, point_size, line_size) {
 p_journal <- make_plot(base_size = 8, point_size = 2.5, line_size = 0.3)
 
 cairo_pdf("outputs/figures/journal/14_figure2_static_response.pdf",
-          width = 7, height = 5.5)
+          width = 7, height = 3.5)
 print(p_journal)
 dev.off()
 cat("保存: outputs/figures/journal/14_figure2_static_response.pdf\n")
@@ -242,7 +243,7 @@ cat("保存: outputs/figures/journal/14_figure2_static_response.pdf\n")
 p_pres <- make_plot(base_size = 18, point_size = 5, line_size = 0.8)
 
 cairo_pdf("outputs/figures/presentation/14_figure2_static_response.pdf",
-          width = 10, height = 8)
+          width = 10, height = 4.5)
 print(p_pres)
 dev.off()
 cat("保存: outputs/figures/presentation/14_figure2_static_response.pdf\n")
