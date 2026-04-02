@@ -71,12 +71,10 @@ fmt_median_iqr <- function(x) {
 # 2. 列ごとの統計量を計算する関数
 # -----------------------------------------------------------------------------
 
-make_col_stats <- function(d, total_n, clin_n = NA) {
+make_col_stats <- function(d, total_n) {
   n <- nrow(d)
-  snr <- if (!is.na(clin_n)) paste0(round(clin_n / total_n * 100, 1), "% clinical") else "—"
   list(
     n_pct     = fmt_n_pct(n, total_n),
-    snr       = snr,
     density   = as.character(round(n / N_BEDS / N_DAYS, 1)),
     advisory  = fmt_n_pct(sum(d$優先度 == "ADVISORY"), n),
     warning   = fmt_n_pct(sum(d$優先度 == "WARNING"),  n),
@@ -88,8 +86,7 @@ make_col_stats <- function(d, total_n, clin_n = NA) {
 }
 
 total_n    <- nrow(df)
-clin_n     <- sum(df$alarm_class == "clinical")
-all_s      <- make_col_stats(df,                                    total_n, clin_n = clin_n)
+all_s      <- make_col_stats(df,                                    total_n)
 tech_s     <- make_col_stats(filter(df, alarm_class == "technical"), total_n)
 clin_s     <- make_col_stats(filter(df, alarm_class == "clinical"),  total_n)
 
@@ -102,7 +99,6 @@ build_table1_main <- function(all_s, tech_s, clin_s,
   tibble(
     Characteristic = c(
       "Events, n (%)",
-      "Signal-to-noise ratio",
       "Alarm density (/bed/day)",
       "Priority",
       "  ADVISORY, n (%)",
@@ -114,9 +110,9 @@ build_table1_main <- function(all_s, tech_s, clin_s,
       "Alarm duration",
       "  Duration, median [IQR], sec"
     ),
-    !!col_all  := c(all_s$n_pct,  all_s$snr,  all_s$density,  "", all_s$advisory,  all_s$warning,  all_s$crisis,  "", all_s$dismissed,  all_s$ttd,  "", all_s$duration),
-    !!col_tech := c(tech_s$n_pct, tech_s$snr, tech_s$density, "", tech_s$advisory, tech_s$warning, tech_s$crisis, "", tech_s$dismissed, tech_s$ttd, "", tech_s$duration),
-    !!col_clin := c(clin_s$n_pct, clin_s$snr, clin_s$density, "", clin_s$advisory, clin_s$warning, clin_s$crisis, "", clin_s$dismissed, clin_s$ttd, "", clin_s$duration)
+    !!col_all  := c(all_s$n_pct,  all_s$density,  "", all_s$advisory,  all_s$warning,  all_s$crisis,  "", all_s$dismissed,  all_s$ttd,  "", all_s$duration),
+    !!col_tech := c(tech_s$n_pct, tech_s$density, "", tech_s$advisory, tech_s$warning, tech_s$crisis, "", tech_s$dismissed, tech_s$ttd, "", tech_s$duration),
+    !!col_clin := c(clin_s$n_pct, clin_s$density, "", clin_s$advisory, clin_s$warning, clin_s$crisis, "", clin_s$dismissed, clin_s$ttd, "", clin_s$duration)
   )
 }
 
@@ -137,7 +133,6 @@ table1_main_JA <- build_table1_main(
   ) |>
   mutate(項目 = recode(項目,
     "Events, n (%)"                          = "件数, n (%)",
-    "Signal-to-noise ratio"                  = "臨床アラーム割合（全件中）",
     "Alarm density (/bed/day)"               = "アラーム密度（件/床/日）",
     "Priority"                               = "優先度",
     "  ADVISORY, n (%)"                      = "  ADVISORY, n (%)",
